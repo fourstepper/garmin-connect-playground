@@ -23,17 +23,17 @@ func readCreds() (email string, password string) {
 	return email, password
 }
 
-func mphToKph(mph float64) (kph float64) {
-	return mph * 1.609344
+// converts m/s to km/h
+func msToKph(ms float64) (kmh float64) {
+	kmh = ms * 3.6
+	return kmh
 }
 
 func formatActivities(activities []connect.Activity) (transformedActivites []connect.Activity) {
 	for _, activity := range activities {
-		activity := &activity
-		activity.MaxSpeed = mphToKph(activity.MaxSpeed)
-		activity.AverageSpeed = mphToKph(activity.AverageSpeed)
-
-		transformedActivites = append(transformedActivites, *activity)
+		activity.MaxSpeed = msToKph(activity.MaxSpeed)
+		activity.AverageSpeed = msToKph(activity.AverageSpeed)
+		transformedActivites = append(transformedActivites, activity)
 
 	}
 	return transformedActivites
@@ -48,7 +48,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	activities, err := c.Activities("", 1, 20)
+	activities, err := c.Activities("", 1, 1000)
 	if err != nil {
 		log.Fatal(err)
 	}
